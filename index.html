@@ -4,7 +4,8 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Happy Birthday Mage Menika ❤️</title>
-    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Poppins:wght@300;400;600&family=Abhaya+Libre:wght@600;800&display=swap" rel="stylesheet">
+    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
     <style>
         * {
             margin: 0;
@@ -13,7 +14,6 @@
         }
 
         body {
-            /* Background Photo Overlay */
             background: linear-gradient(rgba(13, 0, 26, 0.75), rgba(42, 0, 51, 0.85)), 
                         url('https://user35788.na.imgto.link/public/20260924/1000028595.avif') no-repeat center center fixed;
             background-size: cover;
@@ -26,29 +26,19 @@
             overflow: hidden;
             text-align: center;
             padding: 20px;
+            position: relative;
         }
 
-        /* Fireworks Canvas */
-        #fireworksCanvas {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100vw;
-            height: 100vh;
-            pointer-events: none;
-            z-index: 50;
-        }
-
-        /* Music Floating Button */
+        /* Floating Music Button */
         .music-btn {
             position: fixed;
             top: 20px;
             right: 20px;
-            background: rgba(255, 51, 153, 0.75);
+            background: rgba(255, 51, 153, 0.8);
             backdrop-filter: blur(10px);
             border: 1px solid rgba(255, 255, 255, 0.5);
             color: #fff;
-            padding: 12px 20px;
+            padding: 10px 20px;
             border-radius: 30px;
             cursor: pointer;
             z-index: 100;
@@ -62,305 +52,228 @@
         }
 
         .music-btn:hover {
-            background: rgba(255, 51, 153, 0.95);
             transform: scale(1.05);
+            background: rgba(255, 51, 153, 1);
         }
 
-        .card-container {
-            position: relative;
-            background: rgba(0, 0, 0, 0.6);
-            backdrop-filter: blur(15px);
-            -webkit-backdrop-filter: blur(15px);
-            border: 1px solid rgba(255, 255, 255, 0.2);
-            padding: 40px 25px;
-            border-radius: 25px;
-            max-width: 480px;
-            width: 90%;
-            box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
-            z-index: 10;
+        /* Falling Background Items */
+        .falling-container {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100vw;
+            height: 100vh;
+            pointer-events: none;
+            z-index: 1;
+            overflow: hidden;
         }
 
-        /* Countdown Style */
-        .countdown-title {
-            font-size: 18px;
-            color: #ff99dd;
-            margin-bottom: 20px;
-            letter-spacing: 0.5px;
-            text-shadow: 0 2px 4px rgba(0,0,0,0.6);
-        }
-
-        .timer-box {
-            display: flex;
-            justify-content: center;
-            gap: 10px;
-            margin-bottom: 20px;
-        }
-
-        .time-unit {
-            background: rgba(255, 255, 255, 0.15);
-            padding: 12px 14px;
-            border-radius: 12px;
-            min-width: 65px;
-            border: 1px solid rgba(255, 105, 180, 0.4);
-            backdrop-filter: blur(5px);
-        }
-
-        .time-unit span {
-            display: block;
+        .falling-item {
+            position: absolute;
+            top: -50px;
             font-size: 24px;
-            font-weight: 600;
-            color: #ff66cc;
-            text-shadow: 0 0 10px rgba(255, 102, 204, 0.6);
+            user-select: none;
+            animation: fall linear infinite;
         }
 
-        .time-unit label {
-            font-size: 10px;
-            color: #e0e0e0;
-            text-transform: uppercase;
+        @keyframes fall {
+            0% {
+                transform: translateY(0) rotate(0deg);
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(105vh) rotate(360deg);
+                opacity: 0.2;
+            }
         }
 
-        /* Fireworks Wish Text */
-        .fireworks-text {
-            display: none;
+        /* Card Container */
+        .container {
+            z-index: 10;
+            background: rgba(255, 255, 255, 0.1);
+            padding: 35px 25px;
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            box-shadow: 0 8px 32px 0 rgba(0, 0, 0, 0.37);
+            border: 1px solid rgba(255, 255, 255, 0.18);
+            max-width: 500px;
+            width: 100%;
+        }
+
+        h1 {
             font-family: 'Dancing Script', cursive;
-            font-size: 36px;
-            color: #ff66cc;
-            text-shadow: 0 0 20px #ff3399, 0 0 40px #ff99dd;
-            animation: pulseText 1.5s infinite alternate;
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+            color: #ff66b2;
         }
 
-        .fireworks-subtext {
-            font-size: 22px;
-            color: #ffffff;
-            margin-top: 10px;
-            font-family: 'Poppins', sans-serif;
+        #timer {
+            font-size: 3rem;
+            font-weight: bold;
+            margin: 15px 0;
+            letter-spacing: 2px;
+            color: #fff;
             text-shadow: 0 0 10px #ff3399;
         }
 
-        @keyframes pulseText {
-            0% { transform: scale(0.95); opacity: 0.8; }
-            100% { transform: scale(1.08); opacity: 1; }
-        }
-
-        /* Go Section */
-        .go-section {
-            display: none;
-            animation: fadeIn 1s ease-in-out forwards;
-        }
-
-        @keyframes fadeIn {
-            from { opacity: 0; transform: scale(0.8); }
-            to { opacity: 1; transform: scale(1); }
-        }
-
-        .photo-frame {
-            width: 130px;
-            height: 130px;
-            margin: 0 auto 20px auto;
-            border-radius: 50%;
-            padding: 4px;
-            background: linear-gradient(45deg, #ff3399, #ff99dd);
-            box-shadow: 0 0 25px rgba(255, 51, 153, 0.8);
-        }
-
-        .photo-frame img {
-            width: 100%;
-            height: 100%;
-            object-fit: cover;
-            border-radius: 50%;
-        }
-
-        .btn-go {
-            padding: 15px 40px;
-            background: linear-gradient(90deg, #ff3399, #ff66cc);
-            border: none;
-            border-radius: 40px;
-            color: #fff;
-            font-size: 22px;
-            font-weight: 700;
-            cursor: pointer;
-            box-shadow: 0 0 25px rgba(255, 51, 153, 0.8);
-            transition: 0.3s;
-            letter-spacing: 2px;
+        /* Sinhala Love Message Style */
+        .love-message {
+            font-family: 'Abhaya Libre', serif;
+            font-size: 1.8rem;
+            font-weight: 800;
+            color: #ff99dd;
             margin-top: 15px;
+            text-shadow: 0 0 8px rgba(255, 102, 178, 0.8);
+            letter-spacing: 1px;
         }
 
-        .btn-go:hover {
-            transform: scale(1.1);
-            box-shadow: 0 0 35px rgba(255, 102, 204, 1);
+        .go-btn {
+            display: none;
+            margin: 20px auto 0;
+            padding: 12px 40px;
+            font-size: 1.4rem;
+            font-weight: bold;
+            color: #fff;
+            background: linear-gradient(45deg, #ff3399, #ff66b2);
+            border: none;
+            border-radius: 50px;
+            cursor: pointer;
+            box-shadow: 0 0 20px rgba(255, 51, 153, 0.8);
+            animation: pulse 1.5s infinite;
+            text-decoration: none;
         }
 
-        .heart {
-            position: absolute;
-            bottom: -50px;
-            font-size: 20px;
-            color: #ff3399;
-            animation: floatUp 6s linear infinite;
-            opacity: 0.7;
-        }
-
-        @keyframes floatUp {
-            0% { transform: translateY(0) rotate(0deg); opacity: 1; }
-            100% { transform: translateY(-100vh) rotate(360deg); opacity: 0; }
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.08); }
+            100% { transform: scale(1); }
         }
     </style>
 </head>
-<body onclick="enableAudioOnFirstClick()">
+<body>
 
-    <canvas id="fireworksCanvas"></canvas>
-
-    <!-- Background Music -->
-    <audio id="bgMusic" loop preload="auto">
-        <source src="https://cdn.pixabay.com/download/audio/2021/08/09/audio_276063b78c.mp3?filename=happy-birthday-155461.mp3" type="audio/mpeg">
+    <!-- Background Music Player -->
+    <audio id="bgMusic" loop autoplay>
+        <source src="https://cdn.pixabay.com/download/audio/2022/03/15/audio_c8c8a732fb.mp3?filename=happy-birthday-155461.mp3" type="audio/mpeg">
     </audio>
 
-    <button class="music-btn" onclick="toggleMusic(event)">
-        🎵 <span id="musicText">Play Music</span>
+    <!-- Music Control Button -->
+    <button class="music-btn" onclick="toggleMusic()">
+        🎵 <span id="musicBtnText">Play Music</span>
     </button>
 
-    <!-- Floating Background Hearts -->
-    <div class="heart" style="left: 10%; animation-delay: 0s;">💖</div>
-    <div class="heart" style="left: 25%; animation-delay: 2s;">❤️</div>
-    <div class="heart" style="left: 45%; animation-delay: 4s;">💕</div>
-    <div class="heart" style="left: 70%; animation-delay: 1s;">💖</div>
-    <div class="heart" style="left: 85%; animation-delay: 3s;">✨</div>
+    <!-- Background Falling Elements Container -->
+    <div class="falling-container" id="fallingContainer"></div>
 
-    <div class="card-container">
-        <!-- 1. Countdown Section -->
-        <div id="countdownSection">
-            <div style="font-size: 60px; margin-bottom: 10px;">🎂</div>
-            <div class="countdown-title">Counting down to your special day... ❤️</div>
-            <div class="timer-box">
-                <div class="time-unit"><span id="days">00</span><label>Days</label></div>
-                <div class="time-unit"><span id="hours">00</span><label>Hours</label></div>
-                <div class="time-unit"><span id="minutes">00</span><label>Mins</label></div>
-                <div class="time-unit"><span id="seconds">00</span><label>Secs</label></div>
-            </div>
-            <p style="font-size: 12px; color: #ffb3ec;">(2026.09.25 - Special Day)</p>
-        </div>
+    <div class="container">
+        <h1>Waiting for the Surprise... ❤️</h1>
+        <div id="timer">05:00</div>
+        
+        <!-- Sinhala Love Message -->
+        <div class="love-message">මගේ මැණික, ආදරෙයි ❤️</div>
 
-        <!-- 2. Fireworks Text Section (Shows during 20s Fireworks) -->
-        <div id="fireworksTextSection" class="fireworks-text">
-            ❤️ Love Mage Menika ❤️
-            <div class="fireworks-subtext">මගේ මැණික මම ආදරෙයි! ✨</div>
-        </div>
-
-        <!-- 3. Go Button Section (Appears after 20s Fireworks) -->
-        <div id="goSection" class="go-section">
-            <div class="photo-frame">
-                <img src="https://user35788.na.imgto.link/public/20260924/1000028595.avif" alt="Mage Menika">
-            </div>
-            <h2 style="font-family: 'Dancing Script', cursive; font-size: 32px; color: #ff99dd; margin-bottom: 15px;">
-                Happy Birthday Mage Menika ❤️
-            </h2>
-            <button class="btn-go" onclick="goToLetter()">GO 💌</button>
-        </div>
+        <!-- GO Button (Links to letter.html) -->
+        <button id="goBtn" class="go-btn" onclick="goToNextPage()">GO ❤️</button>
     </div>
 
-    <!-- Canvas Confetti Library -->
-    <script src="https://cdn.jsdelivr.net/npm/canvas-confetti@1.5.1/dist/confetti.browser.min.js"></script>
-
     <script>
-        const music = document.getElementById("bgMusic");
-        const musicText = document.getElementById("musicText");
-        let hasPlayedOnce = false;
+        // Music Player Controls
+        const music = document.getElementById('bgMusic');
+        const musicBtnText = document.getElementById('musicBtnText');
 
-        function toggleMusic(e) {
-            if(e) e.stopPropagation();
+        // Play music when the user clicks anywhere for the first time
+        document.body.addEventListener('click', function() {
             if (music.paused) {
                 music.play().then(() => {
-                    musicText.innerText = "Pause Music";
+                    musicBtnText.textContent = "Pause Music";
                 }).catch(() => {});
+            }
+        }, { once: true });
+
+        function toggleMusic() {
+            if (music.paused) {
+                music.play();
+                musicBtnText.textContent = "Pause Music";
             } else {
                 music.pause();
-                musicText.innerText = "Play Music";
+                musicBtnText.textContent = "Play Music";
             }
         }
 
-        function enableAudioOnFirstClick() {
-            if (!hasPlayedOnce) {
-                music.play().then(() => {
-                    musicText.innerText = "Pause Music";
-                    hasPlayedOnce = true;
-                }).catch(() => {});
+        // 5 Minutes Countdown Logic
+        let duration = 5 * 60; 
+        const timerDisplay = document.getElementById('timer');
+        const goBtn = document.getElementById('goBtn');
+
+        const countdown = setInterval(() => {
+            let minutes = Math.floor(duration / 60);
+            let seconds = duration % 60;
+
+            minutes = minutes < 10 ? '0' + minutes : minutes;
+            seconds = seconds < 10 ? '0' + seconds : seconds;
+
+            timerDisplay.textContent = `${minutes}:${seconds}`;
+
+            if (--duration < 0) {
+                clearInterval(countdown);
+                timerDisplay.textContent = "It's Time! 🎉";
+                
+                // Show GO button immediately along with fireworks
+                goBtn.style.display = 'inline-block';
+
+                // Trigger Fireworks
+                launchFireworks();
             }
-        }
+        }, 1000);
 
-        // Target: 2026 September 25, 00:00:00 (Midnight)
-        // Using explicit parameters: Year, Month Index (8 = Sept), Day, Hour, Min, Sec
-        const targetDate = new Date(2026, 8, 25, 0, 0, 0).getTime();
+        // Fireworks Function
+        function launchFireworks() {
+            var duration = 5 * 1000;
+            var animationEnd = Date.now() + duration;
+            var defaults = { startVelocity: 30, spread: 360, ticks: 60, zIndex: 100 };
 
-        function updateCountdown() {
-            const now = new Date().getTime();
-            const distance = targetDate - now;
-
-            const daysElem = document.getElementById("days");
-            const hoursElem = document.getElementById("hours");
-            const minsElem = document.getElementById("minutes");
-            const secsElem = document.getElementById("seconds");
-
-            if (!daysElem || !hoursElem || !minsElem || !secsElem) return;
-
-            if (distance <= 0) {
-                if (typeof timerInterval !== 'undefined') clearInterval(timerInterval);
-                startCelebration();
-                return;
-            }
-
-            const days = Math.floor(distance / (1000 * 60 * 60 * 24));
-            const hours = Math.floor((distance % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
-            const minutes = Math.floor((distance % (1000 * 60 * 60)) / (1000 * 60));
-            const seconds = Math.floor((distance % (1000 * 60)) / 1000);
-
-            daysElem.innerText = String(days).padStart(2, '0');
-            hoursElem.innerText = String(hours).padStart(2, '0');
-            minsElem.innerText = String(minutes).padStart(2, '0');
-            secsElem.innerText = String(seconds).padStart(2, '0');
-        }
-
-        let timerInterval;
-
-        document.addEventListener("DOMContentLoaded", function() {
-            updateCountdown();
-            timerInterval = setInterval(updateCountdown, 1000);
-        });
-
-        function startCelebration() {
-            document.getElementById("countdownSection").style.display = "none";
-            document.getElementById("fireworksTextSection").style.display = "block";
-
-            music.play().then(() => {
-                if (musicText) musicText.innerText = "Pause Music";
-            }).catch(() => {});
-
-            const duration = 20 * 1000;
-            const animationEnd = Date.now() + duration;
-
-            const interval = setInterval(function() {
-                const timeLeft = animationEnd - Date.now();
+            var interval = setInterval(function() {
+                var timeLeft = animationEnd - Date.now();
 
                 if (timeLeft <= 0) {
-                    clearInterval(interval);
-                    document.getElementById("fireworksTextSection").style.display = "none";
-                    document.getElementById("goSection").style.display = "block";
-                    return;
+                    return clearInterval(interval);
                 }
 
-                const particleCount = 50 * (timeLeft / duration);
-                if (typeof confetti === "function") {
-                    confetti({
-                        particleCount,
-                        startVelocity: 30,
-                        spread: 360,
-                        origin: { x: Math.random(), y: Math.random() - 0.2 }
-                    });
-                }
+                var particleCount = 50 * (timeLeft / duration);
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.1, 0.3), y: Math.random() - 0.2 } }));
+                confetti(Object.assign({}, defaults, { particleCount, origin: { x: randomInRange(0.7, 0.9), y: Math.random() - 0.2 } }));
             }, 250);
         }
 
-        function goToLetter() {
-            window.location.href = "letter.html"; 
+        function randomInRange(min, max) {
+            return Math.random() * (max - min) + min;
         }
+
+        // Redirection to letter.html
+        function goToNextPage() {
+            window.location.href = "letter.html";
+        }
+
+        // Falling Background Animation (Hearts, Cakes, Gifts, Balloons)
+        const fallingItems = ['❤️', '💖', '🎂', '🎁', '🎈', '✨'];
+        const fallingContainer = document.getElementById('fallingContainer');
+
+        function createFallingItem() {
+            const item = document.createElement('div');
+            item.classList.add('falling-item');
+            item.innerText = fallingItems[Math.floor(Math.random() * fallingItems.length)];
+            item.style.left = Math.random() * 100 + 'vw';
+            item.style.animationDuration = Math.random() * 3 + 4 + 's';
+            item.style.fontSize = Math.random() * 15 + 20 + 'px';
+            
+            fallingContainer.appendChild(item);
+
+            setTimeout(() => {
+                item.remove();
+            }, 7000);
+        }
+
+        setInterval(createFallingItem, 300);
     </script>
 </body>
 </html>
